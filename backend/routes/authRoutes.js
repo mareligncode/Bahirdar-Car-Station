@@ -8,23 +8,10 @@ import User from "../models/Users.js";
 import { refreshToken } from "../controllers/authController.js";
 
 dotenv.config();
-
-
 const router = express.Router();
 router.post("/refresh-token", refreshToken);
-
-
-/* ================= AUTH ROUTES ================= */
-
-// Register new user
 router.post("/register", register);
-
-// Login user
 router.post("/login", login);
-
-/* ================= USER ROUTES ================= */
-
-// Example: Get all drivers (protected, only admin or station admin)
 router.get(
   "/drivers",
   protect,
@@ -39,7 +26,6 @@ router.get(
   }
 );
 
-// Example: Get all passengers (protected, only admin)
 router.get(
   "/passengers",
   protect,
@@ -54,12 +40,10 @@ router.get(
   }
 );
 
-// Example: Get logged-in user profile
 router.get("/me", protect, async (req, res) => {
   res.json(req.user);
 });
 
-// Example: Update logged-in user profile
 router.put("/me", protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
