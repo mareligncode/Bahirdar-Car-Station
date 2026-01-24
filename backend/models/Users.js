@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
       enum: ["passenger", "driver", "station_admin", "super_admin"],
       required: true,
       index: true,
+      default:"passanger"
     },
 
     emergencyContact: {
@@ -70,11 +71,6 @@ refreshToken: {
   { timestamps: true }
 );
 
-/* ================= INDEXES ================= */
 
-// compound index for dashboards
 userSchema.index({ role: 1, isActive: 1 });
-
-// unique constraints (already defined in schema, this is enough)
-
 export default mongoose.model("User", userSchema);

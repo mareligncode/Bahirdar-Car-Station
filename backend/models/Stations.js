@@ -1,22 +1,21 @@
-const stationSchema = new mongoose.Schema({
-    stationCode: { type: String, 
-        required: true, unique: true },
-    stationName: { type: String,
-         required: true },
-    location: String,
-    city: String,
-    contactPhone: String,
-    contactEmail: String,
-    managerID: { type: mongoose.Schema.Types.ObjectId,
-         ref: "User" },
-    isActive: { type: Boolean, default: true },
-    facilities: [String],
-}, { timestamps: true });
+import mongoose from "mongoose";
 
-stationSchema.index({ stationCode: 1 }, 
-    { unique: true });
-stationSchema.index({ city: 1 });
-stationSchema.index({ managerID: 1 });
-stationSchema.index({ isActive: 1 });
+const stationSchema = new mongoose.Schema(
+    {
+        stationCode: { type: String, required: true, unique: true }, // "BD-STATION-01"
+        stationName: { type: String, required: true },
+        location: String,
+        city: String,
+        contactPhone: String,
+        contactEmail: String,
+        managerID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        isActive: { type: Boolean, default: true },
+        facilities: [String], // ["waiting_area", "cafeteria", "restrooms"]
+    },
+    { timestamps: true }
+);
 
-export const Station = mongoose.model("Station", stationSchema);
+export default mongoose.model("Station", stationSchema);
