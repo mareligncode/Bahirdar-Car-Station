@@ -6,7 +6,6 @@ import { generateAccessToken, generateRefreshToken } from "../utils/generateToke
 
 dotenv.config();
 
-/* ================= REGISTER ================= */
 export const register = async (req, res) => {
   try {
     const fullName = req.body.fullName?.trim();
@@ -19,7 +18,6 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if user already exists
     const userExists = await User.findOne({
       $or: [{ email }, { phoneNumber }],
     });
@@ -27,10 +25,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create the user
     const user = await User.create({
       fullName,
       email,
@@ -39,11 +34,8 @@ export const register = async (req, res) => {
       role,
     });
 
-    // Generate tokens
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
-
-    // Save refresh token in DB
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -58,7 +50,6 @@ export const register = async (req, res) => {
   }
 };
 
-/* ================= LOGIN ================= */
 export const login = async (req, res) => {
   try {
     const email = req.body.email?.trim();
@@ -68,7 +59,6 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // ADD .select('+password') to include the password field
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -98,7 +88,6 @@ export const login = async (req, res) => {
   }
 };
 
-/* ================= REFRESH TOKEN ================= */
 export const refreshToken = async (req, res) => {
   try {
     const { refreshToken: token } = req.body;
@@ -112,7 +101,6 @@ export const refreshToken = async (req, res) => {
       return res.status(403).json({ message: "Invalid refresh token" });
     }
 
-    // Verify token safely
     try {
       jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 
